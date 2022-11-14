@@ -39,4 +39,14 @@ char *clean_spaces(char *buffer);
 char **create_argv(char *input_buffer, list_t **path);
 void free_argv(char **argv);
 
+/* strings-1.c */
+int str_len(char *s);
+char *str_cpy(char *dest, char *src);
+char *str_dup(char *str);
+char *str_cat(char *dest, char *src);
+char *str_con(char *s1, char *s2);
+
+/* errors.c */
+void ctrl_c(__attribute__((unused)) int x);
+void print_error(char *program_name, char *input, int error_num);
 #endif /* SHELL_H */
