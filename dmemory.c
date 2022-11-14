@@ -9,15 +9,17 @@
  */
 char **create_argv(char *input_buffer, list_t **path)
 {
-	int = 0, ac = 0, argc = 1;
+	int i = 0, ac = 0, argc = 1;
 	char *current_string, *str_to_put, *new_input;
 	char **argv;
 
 	new_input = get_path(input_buffer, path);
 	while (new_input[i])
 	{
-		/* counter increases if current position is a space
-		 * and following position not NULL, space nor \n */
+		/**
+		 * counter increases if current position is a space
+		 * and following position not NULL, space nor \n
+		 */
 		if (new_input[i] == ' ' &&
 				(new_input[i + 1] &&
 				 (new_input[i + 1] != ' ' &&
@@ -32,7 +34,7 @@ char **create_argv(char *input_buffer, list_t **path)
 		write(STDOUT_FILENO, "MALLOC ERROR\n", 14);
 		return (NULL);
 	}
-	current _string = strtok(new_input, "\n");
+	current_string = strtok(new_input, "\n");
 	current_string = strtok(current_string, " ");
 
 	/* adds arguments to array */
