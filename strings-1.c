@@ -1,9 +1,9 @@
 #include "shell.h"
 
 /**
- * str_len -returns the lenght of the string
- * @s: string
- * Return: length of string
+ * str_len - returns the length of a string.
+ * @s: string.
+ * Return: Length of @s.
  */
 int str_len(char *s)
 {
@@ -21,11 +21,11 @@ int str_len(char *s)
 }
 
 /**
- * str_cpy - copy the string pointed to by src including the null byte
+ * str_cpy - copy the string pointed to by src inluding the null byte
  * to the buffer pointed to by dest.
- * @dest: destination
- * @src: source
- * Return: @direction = pointer to dest
+ * @dest: destination.
+ * @src: source.
+ * Return: @direction = pointer to dest.
  */
 char *str_cpy(char *dest, char *src)
 {
@@ -42,11 +42,10 @@ char *str_cpy(char *dest, char *src)
 }
 
 /**
- * str-dup - returns a pointer to a new string which is a duplicate
- * of str
- * @str: source of string to duplicate
+ * str_dup - returns a pointer to a new string which is a duplicate of str.
+ * @str: source string to duplicate.
  * Return: pointer to the duplicated string.
- * or NULL if str = NULL or if insuffucient memory
+ * or NULL if str = NULL or if insufficient memory was available.
  */
 char *str_dup(char *str)
 {
@@ -61,10 +60,10 @@ char *str_dup(char *str)
 }
 
 /**
- * str_cat - concatenates two strings.
- * @dest: destination
- * @src: source
- * Return: pointer to the resulting string destination
+ * *str_cat - concatenates two strings.
+ * @dest: destination.
+ * @src: source.
+ * Return: pointer to the resulting string dest.
  */
 char *str_cat(char *dest, char *src)
 {
@@ -74,17 +73,18 @@ char *str_cat(char *dest, char *src)
 	if (src == NULL)
 		return (ptr);
 	for (i = 0; dest[i] != '\0'; i++)
-		;
+	;
 	for (j = 0; src[j] != '\0'; i++, j++)
 		dest[i] = src[j];
 	dest[i] = '\0';
+
 	return (ptr);
 }
 
 /**
- * str_con - concatenates two strings into a new memory address
- * @s1: first string to concatenate
- * @s2: second string to concatenate
+ * str_con - concatenate two strings into a new memory address.
+ * @s1: first string to concatenate.
+ * @s2: second string to concatenate.
  * Return: memory address to the new string.
  */
 char *str_con(char *s1, char *s2)

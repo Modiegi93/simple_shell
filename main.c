@@ -1,20 +1,19 @@
 #include "shell.h"
 
 /**
- * main - execute the interactive or non-interactive mode of the shell
- * @ac: argument count (unused)
- * @av: argument vector (unused)
- * @env: environment variable
- *
+ * main - execute the interactive or non-interactive mode of the shell.
+ * @ac:argumen count (unused).
+ * @av:argument vector (unused).
+ * @env: environment variable.
  * Return: always 0 (success).
  */
-int main(__attribute__((unused)) int ac, char **av, char *env)
+int main(__attribute__((unused)) int ac, char **av, char **env)
 {
 	list_t *path;
 	char *program_name = av[0];
 	int aux, mode = 0;
 
-	signal(SIGINT, SIGN_IGN);
+	signal(SIGINT, SIG_IGN);
 	path = list_path(env);
 	if (isatty(0))
 		mode = 1;
@@ -24,12 +23,12 @@ int main(__attribute__((unused)) int ac, char **av, char *env)
 }
 
 /**
- * start_shell - runs the interactive shell
- * @path: pointer to the list of dir of the PATH
- * @env: environment variable
- * @program_name: argv[0] of main
- * @mode: specify whether to run in interactive or non-interactive mode
- * Return: always 0(success)
+ * start_shell - runs the interactive shell.
+ * @path: pointer to the list of dir of the PATH.
+ * @env: environment variable.
+ * @program_name: argv[0] of main.
+ * @mode: specify whether to run in interactive or non-interactive mode.
+ * Return: always 0 (success).
  */
 int start_shell(list_t *path, char **env, char *program_name, int mode)
 {
@@ -40,8 +39,7 @@ int start_shell(list_t *path, char **env, char *program_name, int mode)
 	while (1)
 	{
 		if (mode == 1)
-			write(STDOUT_FILENO, "\033[0;36mhsh# \033
-					[0m", 16);
+			write(STDOUT_FILENO, "\033[0;36mhsh# \033[0m", 16);
 		signal(SIGINT, ctrl_c);
 		line_status = getline(&buffer, &len, stdin);
 		if (line_status == -1)
@@ -50,14 +48,13 @@ int start_shell(list_t *path, char **env, char *program_name, int mode)
 			{
 				free(buffer);
 				if (mode == 1)
-					write(STDOUT_FILENO, "\n",
-							1);
+					write(STDOUT_FILENO, "\n", 1);
 				return (status);
 			}
 			print_error(program_name, buffer, 3);
 		}
-		status = execute_buffer(buffer, path, env,
-				program_name);
+		/* if buffer only contains spaces or the \n char will show prompt again */
+		status = execute_buffer(buffer, path, env, program_name);
 		if (status == -1 || status == 127 || status == 2)
 		{
 			if (status == -1)
@@ -70,15 +67,14 @@ int start_shell(list_t *path, char **env, char *program_name, int mode)
 }
 
 /**
- * execute_buffer - executes a command line
- * @buffer: command line to execute
- * @path: pointer to the list of dir of the PATH
- * @env: environment variable
- * @program_name: argv[0] of main
- * Return: always 0 (success)
+ * execute_buffer - executes a command line.
+ * @buffer: command line to execute.
+ * @path: pointer to the list of dir of the PATH.
+ * @env: environment variable.
+ * @program_name: argv[0] of main.
+ * Return: always 0 (success).
  */
-int execute_buffer(char *buffer, list_t *path, char **env,
-		char *program_name)
+int execute_buffer(char *buffer, list_t *path, char **env, char *program_name)
 {
 	char *buffer_tr, *input_buffer, *new_buffer;
 	int aux, final, exe_result = 0;
@@ -93,18 +89,16 @@ int execute_buffer(char *buffer, list_t *path, char **env,
 			aux = check_syntax(input_buffer);
 			if (aux == -1)
 			{
-				print_error(program_name,
-						input_buffer, 2);
+				print_error(program_name, input_buffer, 2);
 				free(input_buffer);
 				return (-1);
 			}
-			new_buffer = str_tr(input_buffer, ';',
-					'\n');
+			new_buffer = str_tr(input_buffer, ';', '\n');
 		}
 		else
 			new_buffer = str_dup(input_buffer);
-		exe_result = execute_command(new_buffer, path, env,
-				final, program_name);
+
+		exe_result = execute_command(new_buffer, path, env, final, program_name);
 		free(new_buffer);
 	}
 	free(input_buffer);
@@ -113,16 +107,16 @@ int execute_buffer(char *buffer, list_t *path, char **env,
 }
 
 /**
- * execute_command - run a command
- * @new_buffer: command line to execute
- * @path: pointer to the list of dir of the PATH
- * @env: environment variable
- * @final: total number of separate commands (;)
- * @program_name: argv[0] of main
- * Return: 0 (successful), 1 (command not found, exit command)
+ * execute_command - run a command.
+ * @new_buffer: command line to execute.
+ * @path: pointer to the list of dir of the PATH.
+ * @env: environment variable.
+ * @final: total number of separate commands (;).
+ * @program_name: argv[0] of main.
+ * Return: 0 (successful), 1 (command not found), or 2 (exit command).
  */
 int execute_command(char *new_buffer, list_t *path, char **env,
-		int final, char *program_name)
+			int final, char *program_name)
 {
 	char *tmp_buffer, *current_buffer;
 	char **input;
@@ -136,7 +130,7 @@ int execute_command(char *new_buffer, list_t *path, char **env,
 		for (i = 0; i < current; i++)
 			current_buffer = strtok(NULL, "\n");
 		input = create_argv(current_buffer, &path);
-		/* temp condition to end program */
+		/* // * temp condition to end program */
 		aux = builtins(input, env);
 		if (aux == 2)
 		{
@@ -145,8 +139,7 @@ int execute_command(char *new_buffer, list_t *path, char **env,
 		}
 		if (aux == 0)
 		{
-			exe_result = execute_fork(input,
-					program_name);
+			exe_result = execute_fork(input, program_name);
 		}
 		free_argv(input);
 		free(tmp_buffer);
@@ -183,7 +176,6 @@ int execute_fork(char **input, char *program_name)
 		if (stat(input[0], &stat_status) == -1)
 			exe_result = 127;
 	}
+
 	return (exe_result);
 }
-
-

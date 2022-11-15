@@ -1,15 +1,14 @@
 #include "shell.h"
 
 /**
- * create_argv - turns input_buffer into argument vector
+ * create_argv - turns input_buffer into argument vector.
  * @input_buffer: input_buffer to be processed.
  * @path: pointer to path directory list.
- *
  * Return: a pointer to the new argument vector.
  */
 char **create_argv(char *input_buffer, list_t **path)
 {
-	int i = 0, ac = 0, argc = 1;
+	int i = 0,  ac = 0, argc = 1;
 	char *current_string, *str_to_put, *new_input;
 	char **argv;
 
@@ -21,9 +20,9 @@ char **create_argv(char *input_buffer, list_t **path)
 		 * and following position not NULL, space nor \n
 		 */
 		if (new_input[i] == ' ' &&
-				(new_input[i + 1] &&
-				 (new_input[i + 1] != ' ' &&
-				  new_input[i + 1] != '\n')))
+			(new_input[i + 1] &&
+				(new_input[i + 1] != ' ' &&
+					new_input[i + 1] != '\n')))
 			argc += 1;
 		i++;
 	}
@@ -34,9 +33,9 @@ char **create_argv(char *input_buffer, list_t **path)
 		write(STDOUT_FILENO, "MALLOC ERROR\n", 14);
 		return (NULL);
 	}
+
 	current_string = strtok(new_input, "\n");
 	current_string = strtok(current_string, " ");
-
 	/* adds arguments to array */
 	while (ac < (argc + 1))
 	{
@@ -45,6 +44,7 @@ char **create_argv(char *input_buffer, list_t **path)
 		argv[ac] = str_to_put;
 		current_string = strtok(NULL, " ");
 		ac++;
+
 	}
 	free(new_input);
 	return (argv);
@@ -63,12 +63,12 @@ char *get_path(char *buffer, list_t **path)
 	struct stat status;
 	list_t *list_pointer = *path;
 
-	/* clean input in case that the first(s) chars are spaced */
+	/* clean input in case that the first(s) chars are spaces */
 	input_buffer = clean_spaces(buffer);
 	input = str_dup(input_buffer);
 	free(input_buffer);
 
-	/* extracts the  first argument of input */
+	/* extrae el primer argumento de input */
 	aux = str_dup(input);
 	command = strtok(aux, " ");
 	if (command == NULL)
@@ -80,31 +80,37 @@ char *get_path(char *buffer, list_t **path)
 		free(aux);
 		return (input);
 	}
+	/* check if the first argument is a builtin command */
+	if (check_builtin(command) == 0)
+	{
+		free(aux);
+		return (input);
+	}
 	slash_command = str_con("/", command);
 	slash_input = str_con("/", input);
 
 	free(aux);
-	return (aux_get_path(list_pointer, slash_command,
-			       slash_input, input));
+	return (aux_get_path(list_pointer, slash_command, slash_input, input));
 }
 
+
 /**
- * aux_get_path - auxiliary function for obtaining directory directory * path
+ * aux_get_path - auxiliary function for obtains directory path.
  * @list_pointer: pointer to directory in path list.
  * @slash_command: auxiliary string.
  * @slash_input: auxiliary string.
- * @input: auxiliary string
+ * @input: auxiliary string.
  * Return: directory with concatenated input buffer.
  */
 char *aux_get_path(list_t *list_pointer, char *slash_command,
-	char *slash_input, char *input)
+			char *slash_input, char *input)
 {
 	char *aux;
 	struct stat status;
 
 	while (list_pointer) /* does not reach the end of the list */
 	{
-		/* check if command is executable in list_pointer->dir*/
+		/* check if command is executable in $list_pointer->dir */
 		aux = str_con(list_pointer->dir, slash_command);
 		if (stat(aux, &status) == 0)
 			break;
@@ -114,7 +120,7 @@ char *aux_get_path(list_t *list_pointer, char *slash_command,
 	/* check if command is executable */
 	if (list_pointer && (stat(aux, &status) == 0))
 	{
-		/* concatenate the rest of the arguments */
+		/* concatenar el resto de argumentos */
 		free(aux);
 		aux = str_con(list_pointer->dir, slash_input);
 		free(input);
@@ -130,7 +136,6 @@ char *aux_get_path(list_t *list_pointer, char *slash_command,
 /**
  * clean_spaces - remove spaces in the first position of the buffer.
  * @buffer: buffer to be cleaned.
- *
  * Return: a new buffer equal without spaces in the first position(s).
  */
 char *clean_spaces(char *buffer)
@@ -160,8 +165,8 @@ char *clean_spaces(char *buffer)
 }
 
 /**
- * free_argv - free memory allocated in argument vector.
- * @argv: argument vector to  be freed.
+ * free_argv - frees memory allocated in argument vector.
+ * @argv: argument vector to be freed.
  */
 void free_argv(char **argv)
 {

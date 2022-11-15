@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * ctrl_c - detect the CTRL+C signal print another line with the prompt
+ * ctrl_c - detect the CTRL+C signal and print another line with the prompt.
  * @x: idk.
  */
 void ctrl_c(__attribute__((unused)) int x)
@@ -12,10 +12,10 @@ void ctrl_c(__attribute__((unused)) int x)
 }
 
 /**
- * print_error - print specific erros to standard output.
- * @program_name: argv[0] of main
- * @input: command that produces error
- * @error_num: error number identifies the error type
+ * print_error - print specific errors to standard output.
+ * @program_name: argv[0] of main.
+ * @input: command that produces the error.
+ * @error_num: error number - identifies the error type.
  */
 void print_error(char *program_name, char *input, int error_num)
 {
@@ -23,14 +23,12 @@ void print_error(char *program_name, char *input, int error_num)
 
 	if (error_num == 127) /* command not found */
 	{
-		write(STDOUT_FILENO, program_name,
-				str_len(program_name));
+		write(STDOUT_FILENO, program_name, str_len(program_name));
 		write(STDOUT_FILENO, ": 1: ", 5);
-		write(STDOUT_FILENO, input,
-				str_len(input));
+		write(STDOUT_FILENO, input, str_len(input));
 		write(STDOUT_FILENO, ": not found\n", 12);
 	}
-	if (error_num == 2) /* syntax error */
+	if (error_num == 2) /* syntax error*/
 	{
 		str = "sh: 1: Syntax error: \"";
 		write(STDOUT_FILENO, str, str_len(str));
@@ -40,8 +38,7 @@ void print_error(char *program_name, char *input, int error_num)
 	}
 	if (error_num == 3) /* malloc can't allocate memory */
 	{
-		write(STDOUT_FILENO, program_name, str_len
-				(program_name));
+		write(STDOUT_FILENO, program_name, str_len(program_name));
 		write(STDOUT_FILENO, ": 1: ", 5);
 		str = "internal error allocating memory\n";
 		write(STDOUT_FILENO, str, str_len(str));
