@@ -1,75 +1,49 @@
-TH HSH 1 "November 2022" "ALX School"
-.P
+
+.TH SHELL 1 "NOVEMBER 4, 2021"  "alx-Hoberton-School" "0x16"
+ "1.01" "C - simple_shell - man page"
 
 .SH NAME
-.B hsh \- simple UNIX command interpreter (shell).
+.B simple_shell \- simple UNIX command interpreter made in C 
 
 .SH SYNOPSIS
-.B Execute the shell: ./hsh
+$ /hsh [options] [file]
 
 .SH DESCRIPTION
+Simple_Shell is a command language interpreter that executes commands read from the standard input.
+Clone of sh
 
-.B hsh is a simple UNIX command interpreter that reads commands from
-standard input and executes them, simulating the behavior of the sh (/bin/sh) command interpreter (shell).
+.SH Return Value
 
-Features:
-.RS
-.nf
-- Handles simple commands.
-- Handles the PATH.
-- Handles command lines with arguments.
-- Handles the Ctrl + D condition (end-of-file) to exit the program.
-- Handles the Ctrl + C signal to not kill the program.
-- Handles comments (#).
-- Handles errors.
-.RE
+Always returns the status of the previously executed command ( 0 if no command was executed) , number means exit fail codes
 
-Built-in commands:
-.RS
-.nf
-- Handles help buit-in command that prints information about builtin commands.
-- Handles exit buit-in command that exits the shell.
-- Handles env buit-in command that prints the current environment.
-.RE
+.SH PATH
 
-.SH EXAMPLES
+looks in PATH env variable for executable program file location.
 
-.B 
-hsh should work like this in interactive mode:
-.in +3n
-.nf
-$ ./hsh
-hsh> /bin/ls
-README.md main.c shell.h
-hsh>
-hsh> exit
-$
-.in
+.SH 
 
+.B Invocation
+.in +2n
+simple_shell can be invoked both interactively and non-interactively.
+If invoked with standard input not connected to a terminal, it reads and executes received commands in order.
 
-.B
-hsh should work like this in non-interactive mode:
-.in +3n
-.nf
-$ echo "/bin/ls" | ./hsh
-README.md main.c shell.h
-$ echo "pwd" | ./hsh
-/root
-$
-.in
+If simple_shell is invoked with standard input connected to a terminal, an interactive shell is opened.
+When executing interactively, the simpl_shell displays the prompt \"($) "\ when it is ready to read a command.
+
+.SH OPTIONS
+.B simple_shell
+Command options will be typed after the main command followed by a space and a
+ '-' symbol.
+
+.SH EXAMPLE
+
+./hsh [command] [options]
+$ ls -l
+
 
 .SH BUGS
-The following features presents issues:
-.RS
-.nf
-- Handles the PATH.
-- Handles errors.
-- Handles exit buit-in.
-- Handles env buit-in.
-.RE
-
-.SH SEE ALSO
-execve(2), fork(2), free(3), getline(3), getpid(2), isatty(3), malloc(3), perror(3), sh(1), signal(2), stat(2), strtok(3), wait(2), write(2).
+not many found.
 
 .SH AUTHOR
-Mathapelo Mphahlele and Tsohle Mokhemisi
+Emma Udeji, Pericles Adjovi.
+

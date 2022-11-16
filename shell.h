@@ -1,71 +1,81 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#include <stdio.h>
 #include <errno.h>
+#include <dirent.h>
 #include <signal.h>
 
+
+/*constants*/
+#define EXTERNAL_COMMAND 1
+#define INTERNAL_COMMAND 2
+#define PATH_COMMAND 3
+#define INVALID_COMMAND -1
+
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
 /**
- * struct list - path directory list structure.
- * @dir: directory path.
- * @next: pointer to next directory node.
+ *struct map - a struct that maps a command name to a function 
+ *
+ *@command_name: name of the command
+ *@func: the function that executes the command
  */
-typedef struct list
+
+typedef struct map
 {
-	char *dir;
-	struct list *next;
-} list_t;
+	char *command_name;
+	void (*func)(char **command);
+} function_map;
 
-/* main.c */
-int start_shell(list_t *path, char **env, char *program_name, int mode);
-int execute_buffer(char *buffer, list_t *path, char **env, char *program_name);
-int execute_command(char *new_buffer, list_t *path, char **env,
-			int final, char *program_name);
-int execute_fork(char **input, char *program_name);
+extern char **environ;
+extern char *line;
+extern char **commands;
+extern char *shell_name;
+extern int status;
 
-/* env-list.c */
-list_t *list_path(char **env);
-list_t *create_list(char **environ);
-list_t *add_list(list_t **head, char *dir);
-void free_list(list_t *head);
+/*helpers*/
+void print(char *, int);
+char **tokenizer(char *, char *);
+void remove_newline(char *);
+int _strlen(char *);
+void _strcpy(char *, char *);
 
-/* dmemory.c */
-char *get_path(char *buffer, list_t **path);
-char *aux_get_path(list_t *list_pointer,
-	char *slash_command, char *slash_input, char *input);
-char *clean_spaces(char *buffer);
-char **create_argv(char *input_buffer, list_t **path);
-void free_argv(char **argv);
+/*helpers2*/
+int _strcmp(char *, char *);
+char *_strcat(char *, char *);
+int _strspn(char *, char *);
+int _strcspn(char *, char *);
+char *_strchr(char *, char);
 
-/* built-ins.c */
-char *clean_comments(char *buffer);
-int check_builtin(char *command);
-int check_syntax(char *buffer);
-int builtins(char **input, char **env);
-void print_help(char **input);
+/*helpers3*/
+char *_strtok_r(char *, char *, char **);
+int _atoi(char *);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void ctrl_c_handler(int);
+void remove_comment(char *);
 
-/* strings-1.c */
-int str_len(char *s);
-char *str_cpy(char *dest, char *src);
-char *str_dup(char *str);
-char *str_cat(char *dest, char *src);
-char *str_con(char *s1, char *s2);
+/*utils*/
+int parse_command(char *);
+void execute_command(char **, int);
+char *check_path(char *);
+void (*get_func(char *))(char **);
+char *_getenv(char *);
 
-/* strings-2.c */
-int not_empty(char *input_buffer);
-int str_twins(char *s1, char *s2);
-int str_count(char *buffer, char c);
-char *str_tr(char *buffer, char old_char, char new_char);
+/*built_in*/
+void env(char **);
+void quit(char **);
 
-/* errors.c */
-void ctrl_c(__attribute__((unused)) int x);
-void print_error(char *program_name, char *input, int error_num);
+/*main*/
+extern void non_interactive(void);
+extern void initializer(char **current_command, int type_command);
 
-#endif
+#endif /*SHELL_H*/
+
+
