@@ -34,7 +34,7 @@ int check_syntax(char *buffer)
 /**
  * check_builtin - checks
  * @command: a
- * Return: 0 si es, -1 si no.
+ * Return: 0 if successful, -1 if not.
  */
 int check_builtin(char *command)
 {
@@ -51,7 +51,7 @@ int check_builtin(char *command)
  * builtins - checks
  * @input: a
  * @env: a
- * Return: 0 si no se ejecuta ningun builtin, 1 si se ejecuta, -1 error.
+ * Return: 0 if built-in is not executed, 1 if running, -1 error.
  */
 int builtins(char **input, char **env)
 {
